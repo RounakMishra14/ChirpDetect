@@ -16,3 +16,30 @@ Sure, here's how you can present everything as you're writing it in a more casua
 - **Streamlit Web App**: The project includes a simple web app built with Streamlit, where users can upload their own audio recordings. The app then processes the audio and gives back the predicted bird species.
 
 - **Data Visualization**: To make results easy to interpret, the app shows the classification results in tables and pie charts (using Plotly), so you can see the density and types of birds in the audio clip at a glance.
+
+Here's a well-structured **index** for your `README.md` file for **ChirpDetect**:
+
+---
+
+## Table of Contents
+
+1. [About the Project](#about-the-project)
+2. [Tech Stack](#tech-stack)
+3. [Key Features](#key-features)
+4. [Installation](#installation)
+5. [Usage](#usage)
+    - [Running the Streamlit App](#running-the-streamlit-app)
+    - [Uploading an Audio File](#uploading-an-audio-file)
+    - [Interpreting the Results](#interpreting-the-results)
+6. [Model Training](#model-training)
+    - [Dataset Augmentation](#dataset-augmentation)
+    - [Spectrogram Preprocessing](#spectrogram-preprocessing)
+    - [CNN Model Architecture](#cnn-model-architecture)
+7. [Visualization](#visualization)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Contact](#contact)
+
+---
+
+This structure will guide users through your project, from understanding what it does to running the app, training the model, and more! You can adjust or expand these sections as needed.
