@@ -1,7 +1,4 @@
 # ChirpDetect
-Sure, here's how you can present everything as you're writing it in a more casual, human-friendly way:
-
----
 
 ## About the Project
 
@@ -17,9 +14,7 @@ Sure, here's how you can present everything as you're writing it in a more casua
 
 - **Data Visualization**: To make results easy to interpret, the app shows the classification results in tables and pie charts (using Plotly), so you can see the density and types of birds in the audio clip at a glance.
 
-Here's a well-structured **index** for your `README.md` file for **ChirpDetect**:
 
----
 
 ## Table of Contents
 
@@ -40,6 +35,120 @@ Here's a well-structured **index** for your `README.md` file for **ChirpDetect**
 9. [License](#license)
 10. [Contact](#contact)
 
----
 
-This structure will guide users through your project, from understanding what it does to running the app, training the model, and more! You can adjust or expand these sections as needed.
+## Tech Stack
+
+### Languages and Frameworks:
+- **Python**: Core programming language for model training and data preprocessing.
+- **TensorFlow**: Used for building and training the Convolutional Neural Network (CNN) model.
+- **Streamlit**: Framework to create the interactive web app for bird sound classification.
+- **Librosa**: Library for audio processing and feature extraction.
+- **Plotly**: For creating interactive visualizations, including pie charts for bird classification results.
+
+### Libraries and Tools:
+- **NumPy**: Efficient handling of numerical data and arrays.
+- **Pandas**: For managing and presenting classification data in a structured table format.
+- **Matplotlib**: Used for plotting training and validation curves during model development.
+- **SciPy**: Utility functions for audio processing.
+- **Soundfile**: To handle reading and writing audio files in different formats.
+  
+### Environment:
+- **Jupyter Notebooks**: For model training and experimentation.
+- **Streamlit Cloud**: To deploy and run the bird sound classifier app.
+  
+### Miscellaneous:
+- **Git**: For version control and collaboration.
+- **GitHub**: Repository hosting for the project and collaboration.
+
+
+## Key Features
+
+- **Real-time Bird Classification**: Classifies and identifies bird species from uploaded audio clips, providing instant results.
+
+- **Multi-Class Support**: Capable of recognizing various bird classes, including collared dove, Indian myna, kingfisher, nightingale, owl, sparrow, along with noise and unknown sounds.
+
+- **Interactive Web Application**: Built with Streamlit, offering a user-friendly interface to upload audio files and visualize results.
+
+- **Audio Segmentation**: Automatically segments long audio files into manageable clips for classification, ensuring efficient processing.
+
+- **Visual Analytics**: Displays classification results in an intuitive table format, highlighting the counts of each detected bird class.
+
+- **Dynamic Pie Charts**: Utilizes Plotly to create interactive pie charts that illustrate the density of detected bird classes in the audio clip.
+
+- **Robust Model Training**: Employs a Convolutional Neural Network (CNN) trained on augmented audio data for improved accuracy in bird sound classification.
+
+- **Cross-Platform Compatibility**: Accessible from various devices, including desktops and mobile devices, for seamless user experience.
+
+**Installation** 
+
+```markdown
+## Installation
+
+To set up the **ChirpDetect** project on your local machine, follow these steps:
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Python 3.6 or higher
+- pip (Python package installer)
+
+### Step 1: Clone the Repository
+
+First, clone the repository to your local machine using the following command:
+
+```bash
+git clone https://github.com/yourusername/ChirpDetect.git
+```
+
+### Step 2: Navigate to the Project Directory
+
+Change to the project directory:
+
+```bash
+cd ChirpDetect
+```
+
+### Step 3: Create a Virtual Environment (Optional)
+
+It is recommended to create a virtual environment to manage your project dependencies:
+
+```bash
+python -m venv venv
+```
+
+Activate the virtual environment:
+
+- On Windows:
+
+  ```bash
+  venv\Scripts\activate
+  ```
+
+- On macOS/Linux:
+
+  ```bash
+  source venv/bin/activate
+  ```
+
+### Step 4: Install Required Packages
+
+Install the necessary packages using pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 5: Run the Application
+
+Finally, run the Streamlit application:
+
+```bash
+streamlit run app.py
+```
+
+Your default web browser should open with the **ChirpDetect** application running.
+```
+
+
+
