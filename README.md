@@ -5,8 +5,9 @@
 1. [Overview](#overview)
 2. [Demo](#demo)
 3. [Data Collection Process](#data-collection-process)
-4. [Model Building](#model-building)
-5. [App Features](#app-features)
+4. [Data Preprocessing](#data-preprocessing)
+5. [Model Building](#model-building)
+6. [App Features](#app-features)
 
 ## 📘 Overview
 **ChirpDetect** is an interactive bird sound classification app built with Streamlit and powered by Convolutional Neural Networks (CNNs) to help users identify bird species from their calls. The app allows users to upload recordings and then classifies the bird sounds in real time. By leveraging TensorFlow for the machine learning model, Librosa for audio processing, and Plotly for visualization, the app provides a seamless and informative user experience.
@@ -36,32 +37,69 @@ These recordings were captured from the region [located here](https://maps.app.g
 Here’s the augmentation function used to enhance the dataset:
 
 ```python
-import librosa
-import numpy as np
 import os
+import librosa
+import soundfile as sf
+import numpy as np
 
-def augment_audio(input_file, output_folder, pitch_factor=0.5, stretch_factor=0.8, noise_factor=0.005):
-    # Load the audio file
-    y, sr = librosa.load(input_file)
+# Define paths
+input_dir = 'processed_data'
+output_dir = 'augmented_data'
 
-    # Pitch shifting
-    y_pitch = librosa.effects.pitch_shift(y, sr, n_steps=pitch_factor)
+# Create output directory if it doesn't exist
+os.makedirs(output_dir, exist_ok=True)
 
-    # Time stretching
-    y_stretch = librosa.effects.time_stretch(y, stretch_factor)
+# Function to augment audio
+def augment_audio(audio):
+    # Augmentation techniques
+    # 1. Pitch shift
+    n_steps = np.random.randint(-2, 3)  # Random pitch shift steps
+    pitch_shifted = librosa.effects.pitch_shift(audio, sr=sr, n_steps=n_steps)
 
-    # Adding noise
-    noise = np.random.randn(len(y)) * noise_factor
-    y_noise = y + noise
+    # 2. Time stretch
+    stretch_factor = np.random.uniform(0.8, 1.2)  # Time stretch between 80% and 120%
+    stretched = librosa.effects.time_stretch(audio, rate=stretch_factor)
 
-    # Save augmented files
-    base_name = os.path.splitext(os.path.basename(input_file))[0]
-    librosa.output.write_wav(os.path.join(output_folder, f"{base_name}_pitch.wav"), y_pitch, sr)
-    librosa.output.write_wav(os.path.join(output_folder, f"{base_name}_stretch.wav"), y_stretch, sr)
-    librosa.output.write_wav(os.path.join(output_folder, f"{base_name}_noise.wav"), y_noise, sr)
+    # 3. Add noise
+    noise = np.random.randn(len(audio)) * 0.005  # Adjust noise level as needed
+    noisy_audio = audio + noise
 
-# Example usage:
-# augment_audio('input.wav', 'augmented_data/')
+    return [pitch_shifted, stretched, noisy_audio]
+
+# Iterate through each class folder and augment audio files
+for class_folder in os.listdir(input_dir):
+    class_path = os.path.join(input_dir, class_folder)
+    if os.path.isdir(class_path):
+        # Create a folder for the class in the output directory
+        class_output_path = os.path.join(output_dir, class_folder)
+        os.makedirs(class_output_path, exist_ok=True)
+
+        # Initialize a counter for samples
+        sample_count = 0
+
+        # Process each audio file in the class folder
+        for audio_file in os.listdir(class_path):
+            if audio_file.endswith('.wav'):
+                input_file_path = os.path.join(class_path, audio_file)
+                audio, sr = librosa.load(input_file_path, sr=None)
+
+                # Generate augmented samples until we reach 150 samples
+                while sample_count < 150:
+                    augmented_samples = augment_audio(audio)
+
+                    # Save each augmented sample
+                    for idx, sample in enumerate(augmented_samples):
+                        output_file_name = f"{class_folder}_{audio_file.split('.')[0]}_sample{sample_count + 1}_aug{idx + 1}.wav"
+                        output_file_path = os.path.join(class_output_path, output_file_name)
+                        sf.write(output_file_path, sample, sr)
+                        
+                    sample_count += len(augmented_samples)
+
+                # Reset sample count for the next file
+                sample_count = 0
+
+print("Audio augmentation completed with 150 samples per class.")
+
 ```
 By augmenting the data, the model is better equipped to handle real-world variations in bird calls, despite having a limited number of original samples.
 
