@@ -15,7 +15,7 @@
 The project is built using locally recorded bird call samples from the surrounding area [located here](https://maps.app.goo.gl/45fe6eRNAD3a4nrz6). Due to the limited number of available recordings, **data augmentation** techniques were applied to enhance the dataset. Methods such as time-stretching, pitch-shifting, and adding background noise helped simulate various real-world scenarios. This allowed the model to generalize better and perform effectively, even with the small dataset, by creating a more diverse and robust set of training samples.
 
 ## 🌐 Demo
-Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://yourdemo.link)
+Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chripdetect.streamlit.app)
 
 ##Here's the **Data Collection** section based on your requirements, including the Wikipedia links and the augmentation details:
 
@@ -152,13 +152,13 @@ def preprocess(file_path):
 Below are a few sample spectrograms generated from the bird call audio data:
 
 Collared Dove:
-![Collared Dove](spectrogram/Collared_Dove.png)
+![Collared Dove](images/Collared_Dove.png)
 
 Kingfisher:
-![Kingfisher](spectrogram/kingfisher.png)
+![Kingfisher](images/kingfisher.png)
 
 Owl:
-![Owl](spectrogram/owl.png)
+![Owl](images/owl.png)
 
 Above are the representations of bird calls in the form of images. The spectrograms showcase the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
 
@@ -238,3 +238,104 @@ model.summary()
 
 This CNN architecture is highly effective in learning the unique features from the spectrograms of different bird calls, enabling the model to classify bird species accurately based on sound data. The combination of convolutional layers for feature extraction, pooling layers for dimension reduction, and fully connected layers for decision-making makes this model robust for the bird sound classification task.
 
+
+### 🛠️ App Features
+
+This section describes the key features of the **ChirpDetect** app. The app allows users to upload an audio file (either in MP3 or WAV format) and classify bird species based on the sounds within the file. The classification is achieved through a pre-trained model that processes the audio into 3-second clips and identifies bird calls from the dataset. Below is the full app UI, along with a description of the important features and the code.
+
+#### **App UI Overview**
+![Full UI of ChirpDetect](images/1.png)
+- The **ChirpDetect** app has a clean and user-friendly interface. Users can upload audio files, and the app displays the detected bird species and their counts in the uploaded audio file. The app also includes a visual pie chart representation of bird occurrences.
+  
+#### **File Upload and Bird Count Table**
+![File Upload and Bird Count](images/2.png)
+- The file upload section allows users to browse and select audio files from their system.
+- Once the file is uploaded, the app segments the audio into 3-second clips, classifies bird species in each clip, and displays a table with the count of occurrences for each bird class. 
+
+#### **Plotly Pie Chart**
+![Pie Chart for Bird Density](images/3.png)
+- The pie chart shows the relative density of different bird species found in the audio clip. The chart provides a visual representation of the bird occurrences and highlights the dominant species in the recording.
+
+### 🔍 **App Code**:
+Here’s the full code used to implement the app:
+
+```python
+import streamlit as st
+import numpy as np
+import librosa
+import os
+import tensorflow as tf
+import plotly.express as px
+import pandas as pd
+
+# paths to the dataset
+DATA_DIR = 'augmented_data'  
+BIRD_CLASSES = ['collared_dove', 'indian_mayna', 'kingfisher', 'nightingale', 'owl', 'sparrow', 'unknown', 'noise']
+
+# Load the trained model
+model = tf.keras.models.load_model('bird_classification_model.h5')
+
+def load_wav_16k_mono(filename):
+    wav, sample_rate = librosa.load(filename, sr=16000, mono=True)
+    return wav
+
+def preprocess(wav):
+    # Compute the Short-Time Fourier Transform (STFT)
+    spectrogram = tf.signal.stft(wav, frame_length=320, frame_step=32)
+    spectrogram = tf.abs(spectrogram)
+    spectrogram = tf.expand_dims(spectrogram, axis=-1)  # Add channel dimension
+    desired_shape = (150, 257, 1)  # Desired input shape
+    spectrogram = tf.image.resize_with_crop_or_pad(spectrogram, desired_shape[0], desired_shape[1])
+    return spectrogram
+
+def classify_birds(audio_clips):
+    counts = {bird_class: 0 for bird_class in BIRD_CLASSES if bird_class != 'noise'}
+    for clip in audio_clips:
+        clip_input = preprocess(clip)  # Preprocess the clip
+        clip_input = np.expand_dims(clip_input, axis=0)  # Add batch dimension
+        prediction = model.predict(clip_input)
+        predicted_class_index = np.argmax(prediction)
+        predicted_class = BIRD_CLASSES[predicted_class_index]
+        if predicted_class != 'noise':
+            counts[predicted_class] += 1
+    return counts
+
+st.title("ChirpDetect 🐦")
+
+uploaded_file = st.file_uploader("Upload an audio file (MP3 or WAV)", type=['mp3', 'wav'])
+
+if uploaded_file:
+    with open("temp_audio.wav", "wb") as f:
+        f.write(uploaded_file.getbuffer())
+        
+    # Load the uploaded audio file
+    audio, sr = librosa.load("temp_audio.wav", sr=None)
+    clip_length = 3  # 3 seconds
+    num_clips = int(len(audio) // (clip_length * sr))
+    audio_clips = [audio[i * clip_length * sr:(i + 1) * clip_length * sr] for i in range(num_clips)]
+    
+    # Classify the birds
+    counts = classify_birds(audio_clips)
+
+    # Filter out categories with zero occurrences and noise
+    filtered_counts = {key: value for key, value in counts.items() if value > 0}
+
+    # Convert counts to DataFrame for better table format
+    if filtered_counts:
+        counts_df = pd.DataFrame(filtered_counts.items(), columns=['Bird Class', 'Count'])
+        counts_df['Count'] = counts_df['Count'].astype(int)  # Ensure counts are integers
+
+        # Display the counts in a styled DataFrame
+        st.subheader("Bird Class Counts")
+        st.dataframe(counts_df.style.highlight_max(axis=0), use_container_width=True)  # Highlight max count in each column
+
+    # Create a pie chart with Plotly
+    if filtered_counts:
+        fig = px.pie(names=list(filtered_counts.keys()), values=list(filtered_counts.values()),
+                      title="Density of Birds in the Clip", hole=0.4)
+        fig.update_layout(title_font_size=12)  
+        fig.update_traces(textinfo='percent+label')  # Show percentage and label on pie chart
+        st.plotly_chart(fig)
+```
+
+### 🎨 The **ChirpDetect** app features a user-friendly interface that allows users to upload MP3 or WAV audio files for bird classification. Once a file is uploaded, the app processes the audio using **librosa**, segmenting it into 3-second clips, which are then classified by a pre-trained model. The app counts the occurrences of each bird species detected in the audio and presents this data in a well-formatted table, highlighting the most frequent bird class. Additionally, a pie chart generated with **Plotly** visualizes the relative density of different bird species in the recording, providing an intuitive representation of the classification results. This combination of data presentation and visualization enhances the user experience, making it easy to interpret and understand the findings.
