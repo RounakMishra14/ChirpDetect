@@ -14,12 +14,10 @@
 
 The project is built using locally recorded bird call samples from the surrounding area [located here](https://maps.app.goo.gl/45fe6eRNAD3a4nrz6). Due to the limited number of available recordings, **data augmentation** techniques were applied to enhance the dataset. Methods such as time-stretching, pitch-shifting, and adding background noise helped simulate various real-world scenarios. This allowed the model to generalize better and perform effectively, even with the small dataset, by creating a more diverse and robust set of training samples.
 
-## 🌐 Demo
-Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chripdetect.streamlit.app)
 
-##Here's the **Data Collection** section based on your requirements, including the Wikipedia links and the augmentation details:
+## 🌐 Demo  
+Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chirpdetect.streamlit.app) 
 
----
 
 ## 📈 Data Collection Process
 
