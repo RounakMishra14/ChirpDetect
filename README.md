@@ -16,16 +16,27 @@ The project is built using locally recorded bird call samples from the surroundi
 
 
 ## 🌐 Demo
-Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chirpdetect.streamlit.app). To enhance your testing experience, we have provided sample audio files of various bird calls that you can use to test the app. You can download the sample audio files from the following links:
+Check out the live demo of the app here: [ChirpDetect - Bird Sound Classification App](https://chirpdetect.streamlit.app). To facilitate your testing, we have provided two sample audio files, each containing various bird calls along with their respective counts:
 
-- [Collared Dove Call](link_to_collared_dove_call)
-- [Indian Myna Call](link_to_indian_myna_call)
-- [Kingfisher Call](link_to_kingfisher_call)
-- [Nightingale Call](link_to_nightingale_call)
-- [Owl Call](link_to_owl_call)
-- [Sparrow Call](link_to_sparrow_call)
+1. **[indian_forest_1.mp3](Test_Sammple/indian_forest_1.mp3)**
+   - **Bird Counts:**
+     - Collared Dove: 14
+     - Indian Myna: 7
+     - Kingfisher: 23
+     - Nightingale: 22
+     - Owl: 7
+     - Sparrow: 1
+     - Unknown: 29
 
-Feel free to download these audio clips and upload them to the app to see how well it classifies different bird species based on their sounds!.
+2. **[indian_forest_2.mp3](Test_Sammple/indian_forest_2.mp3)**
+   - **Bird Counts:**
+     - Collared Dove: 6
+     - Kingfisher: 7
+     - Nightingale: 5
+     - Owl: 19
+     - Unknown: 7
+
+Feel free to download these audio clips and upload them to the app to test its performance in classifying different bird species based on their sounds!
 
 ## 📈 Data Collection Process
 
