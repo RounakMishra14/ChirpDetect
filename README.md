@@ -65,5 +65,58 @@ def augment_audio(input_file, output_folder, pitch_factor=0.5, stretch_factor=0.
 ```
 By augmenting the data, the model is better equipped to handle real-world variations in bird calls, despite having a limited number of original samples.
 
+## 🧹 Data Preprocessing
+
+The preprocessing steps in this project involve converting raw audio data into spectrograms, a visual representation of the audio signals in the frequency domain. Two key functions are used for this purpose:
+
+1. **`load_wav_16k_mono(filename)`**: This function loads the audio file and converts it into a 16 kHz mono-channel format using the `librosa` library. It ensures consistency in the data format by down-sampling and making all audio files single-channel.
+
+2. **`preprocess(file_path)`**: This function takes the audio file path as input, converts it into a spectrogram using Short-Time Fourier Transform (STFT), and ensures it has a fixed size by either padding or cropping.
+
+Here’s the code for these functions:
+
+```python
+import librosa
+import soundfile as sf
+
+def load_wav_16k_mono(filename):
+    # Load the audio file using librosa
+    wav, sample_rate = librosa.load(filename, sr=16000, mono=True)
+    
+    # Convert the wav to a mono channel if it’s not already
+    if wav.ndim > 1:
+        wav = librosa.to_mono(wav)
+        
+    return wav
+
+def preprocess(file_path):
+    # Load the audio file and convert to a mono channel
+    wav = load_wav_16k_mono(file_path)
+    
+    # Compute the STFT of the audio signal
+    spectrogram = tf.signal.stft(wav, frame_length=320, frame_step=32)
+    
+    # Take the absolute value of the STFT to get the magnitude spectrogram
+    spectrogram = tf.abs(spectrogram)
+    
+    # Add the channel dimension to make the spectrogram 3D (height, width, channels)
+    spectrogram = tf.expand_dims(spectrogram, axis=-1)  # Shape becomes (time, frequency, 1)
+    
+    # Ensure fixed size by padding or truncating (150 time steps, 257 frequency bins, 1 channel)
+    desired_shape = (150, 257, 1)
+    spectrogram = tf.image.resize_with_crop_or_pad(spectrogram, desired_shape[0], desired_shape[1])
+    
+    return spectrogram
+```
+
+### Example Spectrograms
+
+Below are a few sample spectrograms generated from the bird call audio data:
+
+![Spectrogram 1](example_spectrogram_1.png)
+![Spectrogram 2](example_spectrogram_2.png)
+
+The spectrograms represent the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
+
 
 
