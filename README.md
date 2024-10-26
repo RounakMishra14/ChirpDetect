@@ -15,9 +15,17 @@
 The project is built using locally recorded bird call samples from the surrounding area [located here](https://maps.app.goo.gl/45fe6eRNAD3a4nrz6). Due to the limited number of available recordings, **data augmentation** techniques were applied to enhance the dataset. Methods such as time-stretching, pitch-shifting, and adding background noise helped simulate various real-world scenarios. This allowed the model to generalize better and perform effectively, even with the small dataset, by creating a more diverse and robust set of training samples.
 
 
-## 🌐 Demo  
-Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chirpdetect.streamlit.app) 
+## 🌐 Demo
+Try the live demo here: [ChirpDetect - Bird Sound Classification App](https://chirpdetect.streamlit.app). To enhance your testing experience, we have provided sample audio files of various bird calls that you can use to test the app. You can download the sample audio files from the following links:
 
+- [Collared Dove Call](link_to_collared_dove_call)
+- [Indian Myna Call](link_to_indian_myna_call)
+- [Kingfisher Call](link_to_kingfisher_call)
+- [Nightingale Call](link_to_nightingale_call)
+- [Owl Call](link_to_owl_call)
+- [Sparrow Call](link_to_sparrow_call)
+
+Feel free to download these audio clips and upload them to the app to see how well it classifies different bird species based on their sounds!.
 
 ## 📈 Data Collection Process
 
