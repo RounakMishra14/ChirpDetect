@@ -162,4 +162,79 @@ Owl:
 
 Above are the representations of bird calls in the form of images. The spectrograms showcase the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
 
+## 🧠 Model Building
+
+The classification of bird species based on their sounds is achieved through a Convolutional Neural Network (CNN). CNNs are ideal for tasks involving image recognition and processing, and since our spectrograms are essentially 2D representations of audio data, CNNs are a natural fit for this task. Below is the model structure and detailed explanation:
+
+```python
+# Define the model
+model = Sequential([
+    Input(shape=(X_train.shape[1], X_train.shape[2], 1)),  # Input shape of spectrograms (height, width, channels)
+
+    # First convolutional block
+    Conv2D(32, (3, 3), activation='relu'),  # 32 filters, kernel size 3x3, ReLU activation for non-linearity
+    BatchNormalization(),                   # Batch normalization to stabilize learning and improve performance
+    MaxPooling2D((2, 2)),                   # Max pooling with a 2x2 filter to reduce the spatial dimensions
+
+    # Second convolutional block
+    Conv2D(64, (3, 3), activation='relu'),  # 64 filters for deeper feature extraction
+    BatchNormalization(),
+    MaxPooling2D((2, 2)),
+
+    # Third convolutional block
+    Conv2D(128, (3, 3), activation='relu'),  # 128 filters to capture complex patterns in the spectrogram
+    BatchNormalization(),
+    MaxPooling2D((2, 2)),
+
+    # Global Average Pooling layer
+    GlobalAveragePooling2D(),  # Reduces the feature map size to a single vector by averaging the data across the feature map
+
+    # Dense layer for classification
+    Dense(128, activation='relu'),   # Fully connected layer with 128 units and ReLU activation
+    Dropout(0.5),  # Dropout to prevent overfitting by randomly turning off 50% of neurons during training
+
+    # Output layer for multi-class classification
+    Dense(len(BIRD_CLASSES), activation='softmax')  # Softmax activation to output probabilities for each bird class
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])  # Adam optimizer and sparse categorical crossentropy for multi-class classification
+
+# View the model summary
+model.summary()
+```
+
+#### **Explanation of the Model Architecture:**
+
+1. **Input Layer**: The model takes spectrogram images as input. Each spectrogram is represented as a 3D matrix (height, width, channels), where the first two dimensions represent time and frequency, and the last dimension represents the channel (since these are grayscale images, the channel size is 1).
+
+2. **First Convolutional Block**:
+    - **Conv2D Layer**: The model starts with a convolutional layer having 32 filters with a kernel size of 3x3. This layer extracts features such as edges, shapes, and patterns from the spectrogram.
+    - **BatchNormalization**: Normalizes the activations of the previous layer to improve training stability and speed.
+    - **MaxPooling2D**: Reduces the spatial dimensions (height and width) by taking the maximum value from each 2x2 block, which helps in downsampling and reducing computational complexity.
+
+3. **Second Convolutional Block**:
+    - **Conv2D Layer**: In this block, the number of filters is increased to 64, allowing the network to capture more complex patterns from the spectrogram.
+    - **BatchNormalization**: Applied again for normalization.
+    - **MaxPooling2D**: Further reduces the spatial dimensions.
+
+4. **Third Convolutional Block**:
+    - **Conv2D Layer**: The filter size is increased to 128, enabling the model to learn high-level features. This helps in distinguishing between subtle differences in bird calls.
+    - **BatchNormalization** and **MaxPooling2D**: These are applied once more to maintain stability and further reduce the dimensions.
+
+5. **Global Average Pooling**: This layer converts the 2D feature maps from the final convolutional layer into a single 1D vector by averaging all values in the feature maps. This reduces the data size while retaining key information.
+
+6. **Fully Connected Layers**:
+    - **Dense Layer (128 units)**: This layer connects all neurons to the previous layer's output. It uses ReLU activation to introduce non-linearity, allowing the network to learn more complex relationships between features.
+    - **Dropout Layer**: To prevent overfitting, the dropout layer randomly disables 50% of the neurons during training. This ensures that the model does not memorize the training data and can generalize well to new, unseen data.
+
+7. **Output Layer**:
+    - **Dense Layer (len(BIRD_CLASSES))**: The final layer has as many units as the number of bird species classes (`len(BIRD_CLASSES)`), using a **softmax** activation function. Softmax ensures that the output is a probability distribution over the classes, making it suitable for multi-class classification.
+
+8. **Model Compilation**:
+    - **Optimizer**: The **Adam** optimizer is used for updating the weights, known for its efficiency and ability to handle sparse gradients.
+    - **Loss Function**: **Sparse categorical crossentropy** is chosen as the loss function because it is ideal for multi-class classification problems where the target variable is an integer (each bird class corresponds to a unique integer).
+    - **Metrics**: The model is evaluated using **accuracy** to track its performance during training and testing.
+
+This CNN architecture is highly effective in learning the unique features from the spectrograms of different bird calls, enabling the model to classify bird species accurately based on sound data. The combination of convolutional layers for feature extraction, pooling layers for dimension reduction, and fully connected layers for decision-making makes this model robust for the bird sound classification task.
 
