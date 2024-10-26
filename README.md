@@ -160,7 +160,6 @@ Kingfisher:
 Owl:
 ![Owl](spectrogram/owl.png)
 
-The spectrograms represent the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
-
+Above are the representations of bird calls in the form of images. The spectrograms showcase the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
 
 
