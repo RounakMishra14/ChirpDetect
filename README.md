@@ -151,8 +151,9 @@ def preprocess(file_path):
 
 Below are a few sample spectrograms generated from the bird call audio data:
 
-![Spectrogram 1](example_spectrogram_1.png)
-![Spectrogram 2](example_spectrogram_2.png)
+![Collared Dove](spectrogram/Collared_Dove.png)
+![Kingfisher](spectrogram/kingfisher.png)
+![Owl](spectrogram/owl.png)
 
 The spectrograms represent the intensity of frequencies over time, which are crucial for training the machine learning model in detecting bird species based on their sounds.
 
